@@ -52,3 +52,6 @@ ax.set_xticklabels(index)
 ax.legend()
 
 plt.show()
+
+# write out plot to file
+fig.savefig('figure2a.png')
