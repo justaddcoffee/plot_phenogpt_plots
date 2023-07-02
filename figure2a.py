@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 score_column = 'Score (Peter)'  # change to Score (0-5) once we have met and discussed
+rank_column = 'Rank'
 data_dir = 'data'
 
 file1_name = 'Table 1. ChatGPT4 Diagnosis - text without discussion - txt_cases_results.tsv'
@@ -30,6 +31,7 @@ def to_numeric(s: pd.Series) -> pd.Series:
     # Filter out non-numeric values
     return s[numeric_series.notna()]
 
+
 # Calculate the counts of each score (0 to 5) in both columns
 score_counts_file1 = to_numeric(df['file1_score']).value_counts().sort_index()
 score_counts_file2 = to_numeric(df['file2_score']).value_counts().sort_index()
@@ -54,8 +56,40 @@ fig1.savefig('figure2a.png')
 
 # Create the second grouped histogram (duplicate)
 fig2, ax2 = plt.subplots()
-bar3 = ax2.bar(index - bar_width/2, score_counts_file1, bar_width, alpha=0.5, label=file1_label)
-bar4 = ax2.bar(index + bar_width/2, score_counts_file2, bar_width, alpha=0.5, label=file2_label)
+
+file1_rank = file1[rank_column]
+file2_rank = file2[rank_column]
+
+# Create a new dataframe with the extracted columns
+df = pd.DataFrame({
+    "file1_rank": file1_rank,
+    "file2_rank": file2_rank
+})
+
+
+def set_empty_indices_to_zero(series: pd.Series, this_min: int, this_max: int) -> pd.Series:
+    # Iterate through the range of indices
+    for index in range(this_min, this_max+1):
+        if index not in series.index:
+            try:
+                series[index] = 0
+            except:
+                print("Error: " + str(index))
+                pass
+    return series.sort_index()
+
+# Calculate the counts of each score (0 to 5) in both columns
+rank_counts_file1 = to_numeric(df['file1_rank']).value_counts().sort_index()
+rank_counts_file2 = to_numeric(df['file2_rank']).value_counts().sort_index()
+
+this_max = max(rank_counts_file1.tolist() + rank_counts_file2.tolist())
+this_min = min(rank_counts_file1.tolist() + rank_counts_file2.tolist())
+
+rank_counts_file1 = set_empty_indices_to_zero(rank_counts_file1, this_min, this_max)
+rank_counts_file2 = set_empty_indices_to_zero(rank_counts_file2, this_min, this_max)
+
+bar3 = ax2.bar(index - bar_width/2, rank_counts_file1, bar_width, alpha=0.5, label=file1_label)
+bar4 = ax2.bar(index + bar_width/2, rank_counts_file2, bar_width, alpha=0.5, label=file2_label)
 
 ax2.set_xlabel('Score')
 ax2.set_ylabel('Count')
