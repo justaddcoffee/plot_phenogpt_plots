@@ -63,10 +63,11 @@ file2_rank = file2[rank_column]
 
 # Create a new dataframe with the extracted columns
 df = pd.DataFrame({
+    "file1_score": file1_score,
     "file1_rank": file1_rank,
+    "file2_score": file2_score,
     "file2_rank": file2_rank
 })
-
 
 def set_empty_indices_to_zero(series: pd.Series, this_min: int,
                               this_max: int) -> pd.Series:
@@ -82,9 +83,9 @@ def set_empty_indices_to_zero(series: pd.Series, this_min: int,
     return new_series.sort_index()
 
 
-# Calculate the counts of each score (0 to 5) in both columns
-rank_counts_file1 = to_numeric(df['file1_rank']).value_counts().sort_index()
-rank_counts_file2 = to_numeric(df['file2_rank']).value_counts().sort_index()
+# Find rank where score is 4 or 5, then count the number of times each rank appears
+rank_counts_file1 = to_numeric(df[df['file1_score'].isin([4, 5])]['file1_rank']).value_counts().sort_index()
+rank_counts_file2 = to_numeric(df[df['file2_score'].isin(["4", "5"])]['file2_rank']).value_counts().sort_index()
 
 this_max = int(max(rank_counts_file1.index.tolist() + rank_counts_file2.index.tolist()))
 this_min = int(max(min(rank_counts_file1.index.tolist() + rank_counts_file2.index.tolist()), 1))
