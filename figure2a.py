@@ -9,8 +9,8 @@ data_dir = 'data'
 file1_name = 'Table 1. ChatGPT4 Diagnosis - text without discussion - txt_cases_results.tsv'
 file2_name = 'Table 2. ChatGPT4 Diagnosis - only age_sex_signs_symptoms - phenopacket_based_queries_results.tsv'
 
-file1_label = 'Narative-based queries'
-file2_label = 'Feature-based queries'
+file1_label = 'Narative-based case description'
+file2_label = 'Feature-based case description'
 
 file1 = pd.read_csv(os.path.join(data_dir, file1_name), sep="\t", header=0)
 file2 = pd.read_csv(os.path.join(data_dir, file2_name), sep="\t", header=0)
