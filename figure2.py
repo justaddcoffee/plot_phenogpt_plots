@@ -55,7 +55,7 @@ ax1.legend()
 # Save the first figure to a PNG file
 fig1.savefig('figure2a.png')
 
-# Create the second grouped histogram (duplicate)
+# Create the second grouped histogram
 fig2, ax2 = plt.subplots()
 
 file1_rank = file1[rank_column]
