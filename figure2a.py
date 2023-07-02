@@ -44,7 +44,7 @@ bar2 = ax.bar(index + bar_width/2, score_counts_file2, bar_width, label=file2_la
 
 ax.set_xlabel('Score')
 ax.set_ylabel('Count')
-ax.set_title('Comparison of scores for narrative-based and feature-based GPT queries')
+ax.set_title('A')
 ax.set_xticks(index)
 ax.set_xticklabels(index)
 ax.legend()
