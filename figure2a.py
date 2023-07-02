@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -67,23 +68,26 @@ df = pd.DataFrame({
 })
 
 
-def set_empty_indices_to_zero(series: pd.Series, this_min: int, this_max: int) -> pd.Series:
-    # Iterate through the range of indices
-    for index in range(this_min, this_max+1):
-        if index not in series.index:
-            try:
-                series[index] = 0
-            except:
-                print("Error: " + str(index))
-                pass
-    return series.sort_index()
+def set_empty_indices_to_zero(series: pd.Series, this_min: int,
+                              this_max: int) -> pd.Series:
+    # Create a new series with the desired index range
+    new_series = pd.Series(index=range(this_min, this_max + 1), dtype=series.dtype)
+
+    # Update the new series with values from the original series
+    new_series.update(series)
+
+    # Fill missing indices with zeros
+    new_series = new_series.fillna(0)
+
+    return new_series.sort_index()
+
 
 # Calculate the counts of each score (0 to 5) in both columns
 rank_counts_file1 = to_numeric(df['file1_rank']).value_counts().sort_index()
 rank_counts_file2 = to_numeric(df['file2_rank']).value_counts().sort_index()
 
-this_max = max(rank_counts_file1.tolist() + rank_counts_file2.tolist())
-this_min = min(rank_counts_file1.tolist() + rank_counts_file2.tolist())
+this_max = int(max(rank_counts_file1.index.tolist() + rank_counts_file2.index.tolist()))
+this_min = int(max(min(rank_counts_file1.index.tolist() + rank_counts_file2.index.tolist()), 1))
 
 rank_counts_file1 = set_empty_indices_to_zero(rank_counts_file1, this_min, this_max)
 rank_counts_file2 = set_empty_indices_to_zero(rank_counts_file2, this_min, this_max)
