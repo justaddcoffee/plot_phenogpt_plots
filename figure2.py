@@ -93,14 +93,14 @@ this_min = int(max(min(rank_counts_file1.index.tolist() + rank_counts_file2.inde
 rank_counts_file1 = set_empty_indices_to_zero(rank_counts_file1, this_min, this_max)
 rank_counts_file2 = set_empty_indices_to_zero(rank_counts_file2, this_min, this_max)
 
-bar3 = ax2.bar(rank_counts_file1.index - bar_width/2, rank_counts_file1, bar_width, alpha=0.5, label=file1_label)
-bar4 = ax2.bar(rank_counts_file2.index + bar_width/2, rank_counts_file2, bar_width, alpha=0.5, label=file2_label)
+bar3 = ax2.bar(rank_counts_file1.index - bar_width/2, rank_counts_file1, bar_width, alpha=1, label=file1_label)
+bar4 = ax2.bar(rank_counts_file2.index + bar_width/2, rank_counts_file2, bar_width, alpha=1, label=file2_label)
 
 ax2.set_xlabel('Rank')
 ax2.set_ylabel('Count')
 ax2.set_title('B')
-ax2.set_xticks(index)
-ax2.set_xticklabels(index)
+ax2.set_xticks(rank_counts_file1.index)
+ax2.set_xticklabels(rank_counts_file1.index)
 ax2.legend()
 
 # Save the second figure to a PNG file
