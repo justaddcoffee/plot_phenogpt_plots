@@ -26,6 +26,7 @@ df = pd.DataFrame({
     "file2_score": file2_score
 })
 
+
 def to_numeric(s: pd.Series) -> pd.Series:
     # Convert non-numeric values to NaN
     numeric_series = pd.to_numeric(s, errors='coerce')
