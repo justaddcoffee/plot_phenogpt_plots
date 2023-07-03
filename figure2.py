@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-score_column = 'Score (Peter)'  # change to Score (0-5) once we have met and discussed
+score_column = 'Score (0-5)'
 rank_column = 'Rank'
 data_dir = 'data'
 
