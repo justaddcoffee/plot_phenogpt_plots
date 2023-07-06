@@ -87,16 +87,16 @@ def set_empty_indices_to_zero(series: pd.Series, this_min: int,
     # Fill missing indices with zeros
     new_series = new_series.fillna(0)
 
-    bar_gt_10_value = new_series.loc[10:].sum()
-    for i in new_series.index:
-        if i >= 10:
-            new_series = new_series.drop(i)
-    new_series[">=10"] = bar_gt_10_value
-
     # Separate data between 5 and 9 into a separate bar
     bar_5_9_value = new_series.loc[5:9].sum()
     new_series = new_series.drop(range(5, 10))
     new_series["5-9"] = bar_5_9_value
+
+    bar_gt_10_value = new_series.loc[10:].sum()
+    for i in new_series.index:
+        if i.__class__ == int and i >= 10:
+            new_series = new_series.drop(i)
+    new_series[">=10"] = bar_gt_10_value
 
     return new_series
 
