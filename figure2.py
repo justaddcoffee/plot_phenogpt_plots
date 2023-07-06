@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+from numpy import Inf
 
 score_column = 'Score (0-5)'
 rank_column = 'Rank'
@@ -81,7 +82,23 @@ def set_empty_indices_to_zero(series: pd.Series, this_min: int,
     # Fill missing indices with zeros
     new_series = new_series.fillna(0)
 
-    return new_series.sort_index()
+    new_series.update(series)
+
+    # Fill missing indices with zeros
+    new_series = new_series.fillna(0)
+
+    bar_gt_10_value = new_series.loc[10:].sum()
+    for i in new_series.index:
+        if i >= 10:
+            new_series = new_series.drop(i)
+    new_series[">=10"] = bar_gt_10_value
+
+    # Separate data between 5 and 9 into a separate bar
+    bar_5_9_value = new_series.loc[5:9].sum()
+    new_series = new_series.drop(range(5, 10))
+    new_series["5-9"] = bar_5_9_value
+
+    return new_series
 
 
 # Find rank where score is 4 or 5, then count the number of times each rank appears
@@ -94,13 +111,15 @@ this_min = int(max(min(rank_counts_file1.index.tolist() + rank_counts_file2.inde
 rank_counts_file1 = set_empty_indices_to_zero(rank_counts_file1, this_min, this_max)
 rank_counts_file2 = set_empty_indices_to_zero(rank_counts_file2, this_min, this_max)
 
-bar3 = ax2.bar(rank_counts_file1.index - bar_width/2, rank_counts_file1, bar_width, alpha=1, label=file1_label)
-bar4 = ax2.bar(rank_counts_file2.index + bar_width/2, rank_counts_file2, bar_width, alpha=1, label=file2_label)
+bar3 = ax2.bar([i - bar_width/2 for i in list(range(1, len(rank_counts_file1.index)+1))],
+               rank_counts_file1, bar_width, alpha=1, label=file1_label)
+bar4 = ax2.bar([i + bar_width/2 for i in list(range(1, len(rank_counts_file2.index)+1))],
+               rank_counts_file2, bar_width, alpha=1, label=file2_label)
 
 ax2.set_xlabel('Rank')
 ax2.set_ylabel('Count')
 ax2.set_title('B')
-ax2.set_xticks(rank_counts_file1.index)
+ax2.set_xticks(list(range(1, len(rank_counts_file1.index)+1)))
 ax2.set_xticklabels(rank_counts_file1.index)
 ax2.legend()
 
